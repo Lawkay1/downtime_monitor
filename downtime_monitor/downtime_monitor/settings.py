@@ -42,7 +42,39 @@ INSTALLED_APPS = [
     'monitor.apps.MonitorConfig',
     #third party apps 
     'rest_framework',
+    'django_q'
+    #'django_crontab'
 ]
+
+
+Q2_BROKER = 'django://'
+Q2_TASKS = [
+    'monitor.tasks',
+]
+
+
+
+Q_CLUSTER = {
+    'name': 'myproject',
+    'workers': 8,
+    'recycle': 500,
+    'timeout': 60,
+    'compress': True,
+    'save_limit': 250,
+    'queue_limit': 500,
+    'cpu_affinity': 1,
+    'label': 'Django Q2',
+    'redis': {
+        'host': '127.0.0.1',
+        'port': 6379,
+        'db': 0, }
+}
+
+'''
+CRON_JOBS=[
+    ('*****', 'monitor.cron.monitor_website_status')
+]
+'''
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

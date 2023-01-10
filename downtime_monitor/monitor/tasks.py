@@ -14,27 +14,27 @@ function will
 5. Log all results. 
 
     '''
-    while True:
-        try:
-            websites = get_all_website()
-            print(websites)
-            for website in websites: 
-                current_state=check_website_status(website)
-                print(website)
-                
-                if current_state != website.status: 
-                    website.status=current_state
-                    website.save()
-                    print(website)
-                    #send_mails(website)
-                    #async_task('send_mails', website)
-                log(web_url=website.weburl , web_id=website.id, status= website.status)
-        except Exception as e:
 
-            print(e)
-        time.sleep(60)
-        return 0
-        
+    try:
+        websites = get_all_website()
+        print(websites)
+        for website in websites: 
+            current_state=check_website_status(website)
+            print(website)
+            
+            if current_state != website.status: 
+                website.status=current_state
+                website.save()
+                print(website)
+                #send_mails(website)
+                #async_task('send_mails', website)
+            log(web_url=website.weburl , web_id=website.id, status= website.status)
+    except Exception as e:
+
+        print(e)
+    
+    return 0
+    
                 
 
     

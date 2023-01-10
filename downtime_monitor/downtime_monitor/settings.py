@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+from logging import Formatter
+import json
+
+class JsonFormatter(Formatter):
+    def format(self, record):
+        # Serialize the record to a JSON formatted string
+        record.message = json.dumps(record.__dict__)
+        return super().format(record)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,12 +55,14 @@ INSTALLED_APPS = [
 ]
 
 
-Q2_BROKER = 'django://'
-Q2_TASKS = [
-    'monitor.tasks',
-]
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'lawsondowntimemonitor@gmail.com'
+EMAIL_HOST_PASSWORD = config('PASSWORD')
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 Q_CLUSTER = {
     'name': 'myproject',
@@ -63,18 +73,44 @@ Q_CLUSTER = {
     'save_limit': 250,
     'queue_limit': 500,
     'cpu_affinity': 1,
-    'label': 'Django Q2',
+    'label': 'Django Q',
+    'orm': 'default',
     'redis': {
         'host': '127.0.0.1',
         'port': 6379,
         'db': 0, }
 }
 
-'''
-CRON_JOBS=[
-    ('*****', 'monitor.cron.monitor_website_status')
-]
-'''
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'json_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'status_json.log',
+            'formatter': 'json'
+        },
+    },
+     'formatters': {
+        'json': {
+            '()': JsonFormatter,
+        },
+    },
+    'loggers': {
+        'json_logger': {
+            'handlers': ['json_file'],
+            'level': 'DEBUG',
+        }
+        },
+  #  'loggers': {
+   #     'django': {
+    #        'handlers': ['console'],
+     #       'level': 'INFO',
+      #  },
+    #},
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

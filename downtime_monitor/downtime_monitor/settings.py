@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'monitor.apps.MonitorConfig',
     #third party apps 
     'rest_framework',
-    'django_q'
+    'django_q',
+    'django_crontab'
     #'django_crontab'
 ]
 
@@ -80,6 +81,10 @@ Q_CLUSTER = {
         'port': 6379,
         'db': 0, }
 }
+
+CRONJOBS = [
+    ('* * * * *', 'monitor.tasks.monitor_website_status')
+]
 
 
 LOGGING = {

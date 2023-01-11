@@ -1,7 +1,11 @@
 from monitor.models import get_all_website, get_email_by_website_id
 from monitor.utils import check_website_status , send_mails, log
 from django_q.tasks import async_task
-import time
+from apscheduler.schedulers.background import BackgroundScheduler
+from django_apscheduler.jobstores import DjangoJobStore, register_events
+from django.utils import timezone
+from django_apscheduler.models import DjangoJobExecution
+import sys
 
 def monitor_website_status():
 
@@ -35,6 +39,13 @@ function will
     
     return 0
     
-                
+def start():
+    scheduler = BackgroundScheduler()
+    scheduler.add_jobstore(DjangoJobStore(), "default")
+    # run this job every 1 minute
+    scheduler.add_job(monitor_website_status, 'interval', minutes=1, name='monitor_website', jobstore='default')
+    register_events(scheduler)
+    scheduler.start()
+    print("Scheduler started...", file=sys.stdout)          
 
     

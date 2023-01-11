@@ -51,11 +51,20 @@ INSTALLED_APPS = [
     #third party apps 
     'rest_framework',
     'django_q',
-    'django_crontab'
+    'django_apscheduler'
     #'django_crontab'
+    
 ]
 
-
+SCHEDULER_CONFIG = {
+    "apscheduler.jobstores.default": {
+        "class": "django_apscheduler.jobstores:DjangoJobStore"
+    },
+    'apscheduler.executors.processpool': {
+        "type": "threadpool"
+    },
+}
+SCHEDULER_AUTOSTART = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -69,7 +78,8 @@ Q_CLUSTER = {
     'name': 'myproject',
     'workers': 8,
     'recycle': 500,
-    'timeout': 60,
+    'timeout': 30,
+    'retry':60,
     'compress': True,
     'save_limit': 250,
     'queue_limit': 500,

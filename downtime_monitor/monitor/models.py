@@ -13,7 +13,7 @@ STATUS = (
 
 class Website(models.Model): 
     
-    #name=models.CharField(max_length=20, default=None)
+    
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     weburl = models.URLField(max_length=200)
     status = models.CharField(max_length=10, choices=STATUS, default=STATUS[0][0])

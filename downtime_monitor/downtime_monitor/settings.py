@@ -92,10 +92,16 @@ Q_CLUSTER = {
         'db': 0, }
 }
 
-CRONJOBS = [
-    ('* * * * *', 'monitor.tasks.monitor_website_status')
-]
 
+REST_FRAMEWORK={
+    "NON_FIELD_ERRORS_KEY":"error",
+    "DEFAULT_AUTHENTICATION_CLASSES":(
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        )
+}
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 LOGGING = {
     'version': 1,

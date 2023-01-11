@@ -43,7 +43,7 @@ def start():
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), "default")
     # run this job every 1 minute
-    scheduler.add_job(monitor_website_status, 'interval', minutes=1, name='monitor_website', jobstore='default')
+    scheduler.add_job(monitor_website_status, 'interval', minutes=5, name='monitor_website', jobstore='default')
     register_events(scheduler)
     scheduler.start()
     print("Scheduler started...", file=sys.stdout)          

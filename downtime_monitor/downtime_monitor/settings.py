@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     #third party apps 
     'rest_framework',
     'django_q',
-    'django_apscheduler'
+    'django_apscheduler',
+    'drf_yasg',
     #'django_crontab'
     
 ]

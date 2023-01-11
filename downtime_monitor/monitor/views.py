@@ -5,31 +5,15 @@ from rest_framework import generics, status
 from .models import Website, Emails
 from .serializers import WebsiteSerializer, EmailSerializer
 from rest_framework.response import Response
+from .utils import get_status_and_date
 
 
 # Create your views here.
-'''
-class WebsiteView(generics.CreateAPIView):
-    
-    #This class creates a view that enables only authenticated users
-    #to create a website with an associated mail
-    
-    #permission_classes = (IsAuthenticated,)
-    queryset = Website.objects.all()
-    serializer_class = WebsiteSerializer
-
-    def create(self, request, *args, **kwargs):
-        
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        #serializer.validated_data['user'] = request.user 
-        self.perform_create(serializer)      
-        headers = self.get_success_headers(serializer.data)
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-'''
 
 class WebsiteView(generics.GenericAPIView):
+    '''
+#This class creates a view that enables only authenticated usersto create a website
+    '''
     serializer_class =WebsiteSerializer    
     permission_classes=[IsAuthenticated]
 
@@ -48,7 +32,9 @@ class WebsiteView(generics.GenericAPIView):
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)   
 
 class EmailView(generics.GenericAPIView):
-    print(1)
+    '''
+    This class enables users 
+    '''
     serializer_class= EmailSerializer
     permission_classes= [IsAuthenticated]
     
@@ -64,3 +50,30 @@ class EmailView(generics.GenericAPIView):
 
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)   
             
+class LogsView(generics.GenericAPIView): 
+    '''
+    This class enables users to get the last 20 logs generated in steps of 2 
+    '''
+    permission_classes= [IsAuthenticated]
+
+    def get(self, request, weburl_id):
+            
+        try:
+            
+            logs=get_status_and_date(web_id=weburl_id, tail_index= 20, step= 2)
+
+            data = { 
+                'website': weburl_id,
+                'site_logs': logs
+                }
+
+            return Response(data=data,status=status.HTTP_200_OK)
+        
+        except Exception: 
+
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        
+         
+
+    

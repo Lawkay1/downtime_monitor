@@ -5,7 +5,9 @@ import logging
 from logging import Formatter
 from monitor.models import get_email_by_website_id
 from django.core.mail import send_mail
-
+import pandas as pd
+from django.conf import settings
+import os 
 
 def check_website_status(website): 
     '''
@@ -64,16 +66,37 @@ def log(web_url, web_id, status):
     logger = logging.getLogger('json_logger')
     logger.debug({
      
-        'weburl':web_url , 
-        'web_id':web_id,
-        'status': status,
-        'date':date_time
+        "weburl":web_url , 
+        "web_id":web_id,
+        "status": status,
+        "date":date_time
         
       })
 
     return 0
     
+def get_status_and_date(web_id, tail_index, step): 
+    '''
+    file_path = os.path.join(settings.BASE_DIR, 'status_json.log')
+    with open(file_path, 'r') as json_file:
+        json_conv=json.load(json_file)
 
+        df = pd.read_json(json_conv, lines=True)
+        df = df[df.web_id == web_id]
+        df = df[['status', 'date']].tail(tail_index)
+        
+    return df.iloc[::step,:]
+    '''
+    file_path = os.path.join(settings.BASE_DIR, 'status_json.log')
+    json_objs = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            json_obj = json.loads(line.replace("'", '"'))
+            json_objs.append(json_obj)
+    df = pd.json_normalize(json_objs)
+    df = df[df.web_id == web_id]
+    df = df[['status', 'date']].tail(tail_index)
+    return df.iloc[::step,:]
     
 
 

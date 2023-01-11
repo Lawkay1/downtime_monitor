@@ -6,7 +6,7 @@ from .models import Website, Emails
 from .serializers import WebsiteSerializer, EmailSerializer
 from rest_framework.response import Response
 from .utils import get_status_and_date
-
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 
@@ -17,6 +17,7 @@ class WebsiteView(generics.GenericAPIView):
     serializer_class =WebsiteSerializer    
     permission_classes=[IsAuthenticated]
 
+    @swagger_auto_schema(operation_summary="Add a website you want to monitor")
     def post(self,request):
         data=request.data
 
@@ -38,6 +39,7 @@ class EmailView(generics.GenericAPIView):
     serializer_class= EmailSerializer
     permission_classes= [IsAuthenticated]
     
+    @swagger_auto_schema(operation_summary="Add Emails to a website")
     def post(self, request, weburl_id):
         data=request.data  
          
@@ -52,15 +54,16 @@ class EmailView(generics.GenericAPIView):
             
 class LogsView(generics.GenericAPIView): 
     '''
-    This class enables users to get the last 20 logs generated in steps of 2 
+    This class enables users to get the last 144 logs generated in steps of 6 
     '''
     permission_classes= [IsAuthenticated]
 
+    @swagger_auto_schema(operation_summary="Get Your Server Logs")
     def get(self, request, weburl_id):
             
         try:
             
-            logs=get_status_and_date(web_id=weburl_id, tail_index= 20, step= 2)
+            logs=get_status_and_date(web_id=weburl_id, tail_index= 144, step= 6)
 
             data = { 
                 'website': weburl_id,

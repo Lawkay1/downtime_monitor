@@ -21,15 +21,15 @@ function will
 
     try:
         websites = get_all_website()
-        print(websites)
+        #print(websites)
         for website in websites: 
             current_state=check_website_status(website)
-            print(website)
+            #print(website)
             
             if current_state != website.status: 
                 website.status=current_state
                 website.save()
-                print(website)
+                #print(website)
                 #send_mails(website)
                 #async_task('send_mails', website)
             log(web_url=website.weburl , web_id=website.id, status= website.status)
@@ -42,7 +42,7 @@ function will
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), "default")
-    # run this job every 1 minute
+    # run this job every 10 minute
     scheduler.add_job(monitor_website_status, 'interval', minutes=5, name='monitor_website', jobstore='default')
     register_events(scheduler)
     scheduler.start()

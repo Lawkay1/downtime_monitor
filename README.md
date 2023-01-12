@@ -1,16 +1,28 @@
-## DOWNTIME MONITOR
+This  SaaS is required to 
 
-This SaaS is required to 
+1.  Monitors, detects and tracks website's up and down times
+2.  Provides an API that responds with logs of historical stats for up and down times
+3.  Notifies specific group of people via email (and/or SMS) when a website goes down and comes back up
+4.  Able to perform operations all operations with the highest level of complications and sophistication considered.
 
-1.  ddd
-2.  ddd
-3.  ddd
+After architecting and researching on the best way to go about the system; **these were the steps I set out to implement the task**
 
-However, due to device system constraints (Windows/linux) I was able to improvise but not at scale: Therefore the system was designed with 
+1.  Setting up a cron job (task scheduler) to send pings at specific intervals to all registered websites in the system. 
+2.  Sending notifications to a list of emails with a many-to-one relationship with that website. 
+3.  Encrypting, Streaming, and Analyzing website Logs data using the ELK stack (Elastic search for processing, Logstash for storing and transforming, and Kibana for visualization) SSL encryption was also part of the steps. 
 
-1.  dd
-2.  dd
-3.   dd
+However, due to my device's OS constraints (Windows) and the time sensitivity of the task, I encountered so many difficulties trying to configure many third-party servers (like logstash). Therefore, I tried to improvise and make some technical compromises in order to develop something minimal (but, may not scale): Therefore, the system I designed came with the following features and limitations.
+
+#### Features
+
+1.  Tracks multiple websites on 5 minutes interval
+2.  Can send mails to a group of people related to the website
+3.   Provides an API with logs of historical JSON data for up and downtimes. 
+
+#### Limitations
+
+1.  Might not easily scale because the logs are currently stored at the root directory of the project. As the number of websites and data increases, it might become more difficult to manage. However, I tried to lower the effect of these by developing the logs fetching algorithm in such a way that latency would less likely be a problem. Overall, storing locally will be a problem in the long run
+2.   The logs API only shows logs in json format and not in visualized format. It is, however, ready to be consumed by a client for visualization purposes.
 
 ### RUNNING THE PROJECT
 
@@ -70,3 +82,5 @@ Currently, there are 5 major endpoints you will need and they are 
 *   website/create: POST To add websites to be watched 
 *   website/addmail/\<int:weburl\_id>: POST To add as many mails as you want: These emails will be linked to your website 
 *    website/logs/: GET To retrieve data of a particular website (returned in JSON format)
+*   auth/create: POST For user creation 
+*   auth/jwt/create: This is to generate a jwt token based on your login credentials. 

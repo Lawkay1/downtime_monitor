@@ -48,6 +48,7 @@ SECRET_KEY='django-insecure-%+nzoh_9rf5#fiptmqqxa5y+0ph4)vjdq#iml6d_st41q%ir#7'
 ```
 
 I will update the .env file as soon as i can succesfully get a mail-server to implement my send\_mail tasks. 
+Before making migrations please uncomment the sqllite database config and comment out the postgres database configuration
 
 Navigate to the terminal with manage.py and run: 
 

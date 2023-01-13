@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import config
 from logging import Formatter
 import json
-
+import dj_database_url
 class JsonFormatter(Formatter):
     def format(self, record):
         # Serialize the record to a JSON formatted string
@@ -35,7 +35,9 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 
+if RENDER_EXTERNAL_HOSTNAME: ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -178,13 +180,18 @@ WSGI_APPLICATION = 'downtime_monitor.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+'''
+DATABASES = {
+    'default': dj_database_url.config(         
+          default='postgresql://postgres:postgres@localhost:5432/downtime_monitor', 
+                 conn_max_age=600    )}
 
 AUTH_USER_MODEL = 'user_app.User'
 # Password validation

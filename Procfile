@@ -1,0 +1,1 @@
+web: gunicorn 'downtime_monitor.wsgi'

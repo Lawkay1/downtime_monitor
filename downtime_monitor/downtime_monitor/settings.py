@@ -34,8 +34,8 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
+#STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
 ALLOWED_HOSTS = ['*']
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 
@@ -182,7 +182,7 @@ WSGI_APPLICATION = 'downtime_monitor.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -194,7 +194,7 @@ DATABASES = {
     'default': dj_database_url.config(         
           default='postgresql://postgres:postgres@localhost:5432/downtime_monitor', 
                  conn_max_age=600    )}
-
+'''
 AUTH_USER_MODEL = 'user_app.User'
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

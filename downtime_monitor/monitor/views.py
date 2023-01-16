@@ -61,21 +61,22 @@ class LogsView(generics.GenericAPIView):
     @swagger_auto_schema(operation_summary="Get Your Server Logs")
     def get(self, request, weburl_id):
             
-        try:
-            
-            logs=get_status_and_date(web_id=weburl_id, tail_index= 144, step= 6)
-
-            data = { 
-                'website': weburl_id,
-                'site_logs': logs
-                }
-
-            return Response(data=data,status=status.HTTP_200_OK)
         
-        except Exception: 
+            user = request.user
+            web_model = get_object_or_404(Website, pk = weburl_id)
+             
+            #Validate, the user can only access logs of their website
+            if user == web_model.user_id:
 
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+                logs=get_status_and_date(web_id=weburl_id, tail_index= 144, step= 6)
 
+                data = { 
+                    'website': weburl_id,
+                    'site_logs': logs
+                    }
+
+                return Response(data=data,status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         
          
 

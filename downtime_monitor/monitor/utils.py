@@ -25,10 +25,10 @@ def check_website_status(website):
         
         if response.status_code>=200 or response.status_code <= 299: 
             status = 'UP'
-            pass
+            return status
         else:
             status = 'DOWN'
-        
+            return status
     except Exception: 
         
         status='DOWN'

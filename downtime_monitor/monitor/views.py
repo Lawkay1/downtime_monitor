@@ -7,6 +7,10 @@ from .serializers import WebsiteSerializer, EmailSerializer
 from rest_framework.response import Response
 from .utils import get_status_and_date
 from drf_yasg.utils import swagger_auto_schema
+from bokeh.plotting import figure
+from bokeh.resources import CDN
+from bokeh.embed import components
+from django.shortcuts import render
 
 # Create your views here.
 
@@ -77,7 +81,56 @@ class LogsView(generics.GenericAPIView):
 
                 return Response(data=data,status=status.HTTP_200_OK)
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    
+
         
          
 
     
+def status_visuals(request): 
+
+    data = get_status_and_date(web_id=1, tail_index= 144, step= 6)
+    date = data['date'].tolist()
+    status = transform_data(data['status'].tolist())
+    web_model = get_object_or_404(Website, pk = 1)
+    
+    #print(date.tolist())
+    #print(status.tolist())
+    #date = [1,2,4,5,6,7] 
+    #status = [2,3,5,6,7,7]
+    print(status)
+    print(date)
+    '''
+p = figure(x_range=fruits, height=350, title="Fruit Counts",
+           toolbar_location=None, tools="")
+
+p.vbar(x=fruits, top=counts, width=0.9)
+
+p.xgrid.grid_line_color = None
+p.y_range.start = 0
+
+show(p)
+'''
+
+    plot = figure(title="Website Status", x_axis_label='Date', y_axis_label='Status', x_range=date)
+    plot.vbar(x=date, top=status, width=3)
+    #plot.line(date, status, line_width=2)
+    plot.xgrid.grid_line_color = None
+    plot.y_range.start = 0
+    #show(plot)
+
+    script, div = components(plot, CDN)
+
+    return render(request, 'status.html', {'script': script, 'div': div, 'website':web_model})
+
+def transform_data(status_list): 
+    new_list=[]
+    for s in status_list: 
+        if s=='UP':
+            s=1
+            
+        else:
+            s= 0
+        new_list.append(s)
+    return new_list

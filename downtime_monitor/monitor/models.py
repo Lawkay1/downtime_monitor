@@ -19,7 +19,7 @@ class Website(models.Model):
     status = models.CharField(max_length=10, choices=STATUS, default=STATUS[0][0])
     
     def __str__(self):
-        return f'Website: {self.status}'
+        return f'Website: {self.weburl}'
 
 class Emails(models.Model): 
     website_id = models.ForeignKey(Website, on_delete=models.CASCADE)

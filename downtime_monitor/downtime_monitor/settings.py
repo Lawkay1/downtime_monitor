@@ -16,6 +16,9 @@ from logging import Formatter
 import json
 import dj_database_url
 import os
+from datetime import timedelta
+from celery.schedules import crontab
+
 class JsonFormatter(Formatter):
     def format(self, record):
         # Serialize the record to a JSON formatted string
@@ -54,9 +57,12 @@ INSTALLED_APPS = [
     'monitor.apps.MonitorConfig',
     #third party apps 
     'rest_framework',
-    'django_q',
-    'django_apscheduler',
+    #'django_q',
+    #'django_apscheduler',
     'drf_yasg',
+    'bokeh',
+    'django_celery_results',
+    'django_celery_beat',
     #'django_crontab'
     
 ]
@@ -106,6 +112,8 @@ REST_FRAMEWORK={
 }
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('Bearer',),
+   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=360),
 }
 
 SWAGGER_SETTINGS={
@@ -195,6 +203,18 @@ DATABASES = {
           default='postgresql://postgres:postgres@localhost:5432/downtime_monitor', 
                  conn_max_age=600    )}
 '''
+
+CELERY_TIMEZONE = 'Africa/Lagos'
+CELERY_BROKER_URL = 'redis://localhost:6379/1'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'website_ping': {
+        'task': 'monitor.tasks.monitor_website_status',
+        'schedule': crontab(minute='*/1', hour='*', day_of_week='*'),
+
+    },
+}
 AUTH_USER_MODEL = 'user_app.User'
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -236,3 +256,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+#eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc1MTIyODQxLCJqdGkiOiI5YzczMmU4ODZlNTY0N2FlODdjZjg1Y2ViNThkYzYzMiIsInVzZXJfaWQiOjF9.uKLoi0MDIdDML-I4_0dpUpicV8NN_URhl5H9DAKlEE4

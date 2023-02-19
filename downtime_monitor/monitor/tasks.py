@@ -1,12 +1,15 @@
 from monitor.models import get_all_website, get_email_by_website_id
 from monitor.utils import check_website_status , send_mails, log
 from django_q.tasks import async_task
-from apscheduler.schedulers.background import BackgroundScheduler
-from django_apscheduler.jobstores import DjangoJobStore, register_events
+#from apscheduler.schedulers.background import BackgroundScheduler
+#from django_apscheduler.jobstores import DjangoJobStore, register_events
 from django.utils import timezone
-from django_apscheduler.models import DjangoJobExecution
+#from django_apscheduler.models import DjangoJobExecution
+from celery import shared_task
+
 import sys
 
+@shared_task
 def monitor_website_status():
 
     '''
@@ -33,12 +36,14 @@ function will
                 #send_mails(website)
                 #async_task('send_mails', website)
             log(web_url=website.weburl , web_id=website.id, status= website.status)
+
+
     except Exception as e:
 
         print(e)
     
     return 0
-    
+'''   
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), "default")
@@ -47,5 +52,5 @@ def start():
     register_events(scheduler)
     scheduler.start()
     print("Scheduler started...", file=sys.stdout)          
-
+'''
     

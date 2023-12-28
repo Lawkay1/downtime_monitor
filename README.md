@@ -11,7 +11,7 @@ After architecting and researching on the best way to go about the system; **the
 2.  Sending notifications to a list of emails with a many-to-one relationship with that website. 
 3.  Encrypting, Streaming, and Analyzing website Logs data using the ELK stack (Elastic search for processing, Logstash for storing and transforming, and Kibana for visualization) SSL encryption was also part of the steps. 
 
-However, due to my device's OS constraints (Windows) and the time sensitivity of the task, I encountered so many difficulties trying to configure many third-party servers (like logstash). Therefore, I tried to improvise and make some technical compromises in order to develop something minimal (but, may not scale): Therefore, the system I designed came with the following features and limitations.
+However, due to certain constraints  and, I encountered some bottlenecks in configuring certain third-party servers (like logstash). Therefore, I tried to improvise and make some technical compromises in order to develop something minimal (but, may not scale): Therefore, the system I designed came with the following features and limitations.
 
 #### Features
 
